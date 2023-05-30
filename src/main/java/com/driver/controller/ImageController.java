@@ -8,27 +8,34 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.GeneratedValue;
+
 @RestController
 @RequestMapping("/images")
 public class ImageController {
+    @Autowired
+    ImageService imageService;
+    @PostMapping("/create")
+    public ResponseEntity<Image> createAndReturn(@RequestBody Blog blog,
+                                                 @RequestParam String description,
+                                                 @RequestParam String dimensions) {
 
-    @PostMapping("/{blogId}/add-image")
-    public ResponseEntity<String> addImage(@PathVariable int blogId, @RequestParam String description, @RequestParam String dimensions) {
-        // Add image into the give blog
-        return new ResponseEntity<>("Added image successfully", HttpStatus.OK);
+        Image image =  imageService.createAndReturn(blog,description,dimensions);
+        return new ResponseEntity<>(image, HttpStatus.CREATED);
     }
-
-    @GetMapping("/countImagesInScreen/{id}/{screenDimensions}")
-    public ResponseEntity<Integer> countImagesInScreen(@PathVariable int id, @PathVariable String screenDimensions){
+    @GetMapping("/countImageInScreen/{id}/{screenDimension")
+    public ResponseEntity<Integer> countImageInScreen(@PathVariable int id,@PathVariable String screenDimension){
+        int count = 0;
+        Image image = imageService.findById(id);
+        count = imageService.countImagesInScreen(image,screenDimension);
         return new ResponseEntity<>(count, HttpStatus.OK);
     }
 
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteImage(@PathVariable int id) {
-        // delete image using deleteById
-        return new ResponseEntity<>(HttpStatus.OK);
+        Image image=imageService.findById(id);
+        imageService.deleteImage(image);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
-
-
-

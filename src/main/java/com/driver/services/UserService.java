@@ -1,5 +1,4 @@
 package com.driver.services;
-
 import com.driver.models.*;
 import com.driver.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,26 +10,26 @@ import java.util.List;
 @Service
 public class UserService {
     @Autowired
-    UserRepository userRepository;
+    UserRepository userRepository3;
 
-    @Autowired
-    BlogService blogService;
-
-    public void createUser(User user){
-        userRepository.save(user);
+    public User createUser(String username, String password){
+        User user = new User(username, password);
+        userRepository3.save(user);
+        return user;
     }
 
     public void deleteUser(int userId){
-//        User user=userRepository3.findById(userId).get();
-//        userRepository3.delete(user);
-        userRepository.deleteById(userId);
-    }
-    public void UpdateUser(User user){
-        userRepository.save(user);
+        userRepository3.deleteById(userId);
     }
 
-    public User findUserByUsername(String username){
-
-        return userRepository.findByUsername(username);
+    public User updateUser(Integer id, String password)  {
+        User user;
+//        if(!userRepository3.findById(id).isPresent()) {
+//           throw new Exception();
+//        }
+        user = userRepository3.findById(id).get();
+        user.setPassword(password);
+        userRepository3.save(user);
+        return user;
     }
 }
